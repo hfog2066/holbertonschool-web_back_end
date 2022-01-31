@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 function sum two float
-
 """
 def add(a: float, b: float) -> float:
     """
