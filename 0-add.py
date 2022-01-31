@@ -6,15 +6,7 @@ float b as arguments and returns their sum as a float.
 
 def add(a: float, b: float) -> float:
     """
-       Args:
-           a: The first parameter
-           b: The second parameter
-
-       
-       Return:
-           Sum of two floats
-
-
+    function to add two float numbers   
     """
 
-    return (a + b)
+    return a + b
