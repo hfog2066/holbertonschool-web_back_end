@@ -1,20 +1,60 @@
 #!/usr/bin/env python3
-"""
-Module for 1. Async Comprehensions.
-0x02. Python - Async Comprehension
-"""
+""" Simple pagination """
+import csv
 import math
-import asyncio
-from typing import List
-
-async_generator = __import__('0-async_generator').async_generator
+from typing import List, Tuple
 
 
-async def async_comprehension() -> List[float]:
+class Server:
+    """Server class to paginate a database of popular names.
     """
-    Coroutine that collects 10 random numbers using async comprehension.
-    Returns
-    List[float]
-    list of 10 random numbers
+    DATA_FILE = "Popular_Baby_Names.csv"
+
+    def __init__(self):
+        self.__dataset = None
+
+    def dataset(self) -> List[List]:
+        """Cached dataset
+        """
+        if self.__dataset is None:
+            with open(self.DATA_FILE) as f:
+                reader = csv.reader(f)
+                dataset = [row for row in reader]
+            self.__dataset = dataset[1:]
+
+        return self.__dataset
+
+    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """
+            Get the page
+
+            Args:
+                page: Current page
+                page_size: Total size of the page
+
+            Return:
+                List of the pagination done
+        """
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
+
+        range: Tuple = index_range(page, page_size)
+        pagination: List = self.dataset()
+
+        return (pagination[range[0]:range[1]])
+
+
+def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
-    return [number async for number in async_generator()]
+    Range of the page
+    Args:
+        page: Current page
+        page_size: Total size of the page
+    Return:
+        tuple with the range start and end size page
+    """
+
+    final_size: int = page * page_size
+    start_size: int = final_size - page_size
+
+    return (start_size, final_size)
