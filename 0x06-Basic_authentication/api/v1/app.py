@@ -28,6 +28,41 @@ def unauthorized(error) -> str:
     """
     return jsonnify({"error": "Unauthorized"}), 401
        
+@app.errorhandler(403)
+def forbidden(error) -> str:
+    """Handle a forbidden resource
+
+        Args:
+            error: Error catch
+
+        Return:
+            Info of the error
+    """
+    return jsonify({"error": "Forbidden"}), 403
+
+
+@app.before_request
+def before_request() -> str:
+    """Execute before each request
+
+        Return:
+            String or nothing
+    """
+    if auth is None:
+        return
+
+    expath = ['/api/v1/status/',
+              '/api/v1/unauthorized/',
+              '/api/v1/forbidden/']
+
+    if not (auth.require_auth(request.path, expath)):
+        return
+
+    if (auth.authorization_header(request)) is None:
+        abort(401)
+
+    if (auth.current_user(request)) is None:
+        abort(403)
 
 
 if __name__ == "__main__":
